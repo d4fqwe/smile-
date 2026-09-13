@@ -1,11 +1,11 @@
-```html
+
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Смайлики</title>
+    <title>Мій сайт</title>
 
     <style>
         * {
@@ -14,220 +14,155 @@
 
         body {
             margin: 0;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-            background: white;
+            min-height: 100vh;
+            background: #111;
+            color: white;
             font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
         }
 
-        .smile {
-            position: absolute;
-            font-size: 55px;
-            cursor: pointer;
-            user-select: none;
-
-            transform: translate(-50%, -50%) scale(0);
-
-            animation:
-                appear 0.4s ease-out forwards,
-                float 2s ease-in-out infinite;
+        .container {
+            text-align: center;
         }
 
-        @keyframes appear {
-            0% {
-                transform: translate(-50%, -50%) scale(0) rotate(-180deg);
-            }
-
-            70% {
-                transform: translate(-50%, -50%) scale(1.3) rotate(15deg);
-            }
-
-            100% {
-                transform: translate(-50%, -50%) scale(1) rotate(0);
-            }
+        h1 {
+            font-size: 42px;
+            margin-bottom: 10px;
         }
 
-        @keyframes float {
-            0%, 100% {
-                margin-top: 0;
-            }
-
-            50% {
-                margin-top: -8px;
-            }
-        }
-
-        #start {
-            left: 50%;
-            top: 50%;
-            animation:
-                appear 0.5s ease-out forwards,
-                pulse 1.5s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                transform: translate(-50%, -50%) scale(1);
-            }
-
-            50% {
-                transform: translate(-50%, -50%) scale(1.15);
-            }
-        }
-
-        .particle {
-            position: absolute;
-            font-size: 25px;
-            pointer-events: none;
-
-            animation: particle 0.7s ease-out forwards;
-        }
-
-        @keyframes particle {
-            0% {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1);
-            }
-
-            100% {
-                opacity: 0;
-                transform:
-                    translate(
-                        calc(-50% + var(--x)),
-                        calc(-50% + var(--y))
-                    )
-                    scale(0.2)
-                    rotate(180deg);
-            }
-        }
-
-        #counter {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-
-            padding: 10px 18px;
-
-            background: rgba(0, 0, 0, 0.08);
-            border-radius: 20px;
-
+        p {
+            color: #aaa;
             font-size: 18px;
-            color: #333;
+            margin-bottom: 35px;
+        }
 
-            z-index: 9999;
-            user-select: none;
+        .emoji-button {
+            font-size: 70px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .emoji-button:hover {
+            transform: scale(1.2);
+        }
+
+        .emoji-button:active {
+            transform: scale(0.9);
+        }
+
+        #emoji-container {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .falling-emoji {
+            position: absolute;
+            top: -80px;
+            font-size: 35px;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(110vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .click-text {
+            margin-top: 30px;
+            font-size: 16px;
+            color: #777;
         }
     </style>
 </head>
 
 <body>
 
-    <div id="counter">смайликов: 1</div>
+    <div class="container">
 
-    <div class="smile" id="start">🙂</div>
+        <h1>Мій сайт</h1>
+
+        <p>Натисни на смайлик 👇</p>
+
+        <button class="emoji-button" onclick="createEmojis()">
+            😎
+        </button>
+
+        <div class="click-text">
+            натискай скільки хочеш :)
+        </div>
+
+    </div>
+
+    <div id="emoji-container"></div>
 
     <script>
-        let count = 1;
+        function createEmojis() {
 
-        const emojis = [
-            "🙂",
-            "😄",
-            "😎",
-            "😂",
-            "🥰",
-            "🤪",
-            "😜",
-            "🤩",
-            "😇",
-            "😁"
-        ];
+            const emojis = [
+                "😀",
+                "😂",
+                "😍",
+                "😎",
+                "🥰",
+                "😈",
+                "🤩",
+                "🤣",
+                "❤️",
+                "🔥",
+                "💀",
+                "👀",
+                "✨",
+                "💖",
+                "🤑"
+            ];
 
-        function randomPosition() {
-            const size = 70;
+            const container = document.getElementById("emoji-container");
 
-            return {
-                x: Math.random() * (window.innerWidth - size) + size / 2,
-                y: Math.random() * (window.innerHeight - size) + size / 2
-            };
-        }
+            for (let i = 0; i < 20; i++) {
 
-        function createParticles(x, y) {
-            for (let i = 0; i < 5; i++) {
+                const emoji = document.createElement("div");
 
-                const particle = document.createElement("div");
+                emoji.classList.add("falling-emoji");
 
-                particle.className = "particle";
-                particle.textContent = "✨";
+                emoji.textContent =
+                    emojis[Math.floor(Math.random() * emojis.length)];
 
-                particle.style.left = x + "px";
-                particle.style.top = y + "px";
+                emoji.style.left =
+                    Math.random() * 100 + "vw";
 
-                particle.style.setProperty(
-                    "--x",
-                    (Math.random() * 100 - 50) + "px"
-                );
+                emoji.style.fontSize =
+                    Math.random() * 30 + 25 + "px";
 
-                particle.style.setProperty(
-                    "--y",
-                    (Math.random() * 100 - 50) + "px"
-                );
+                emoji.style.animationDuration =
+                    Math.random() * 2 + 2 + "s";
 
-                document.body.appendChild(particle);
+                emoji.style.animationDelay =
+                    Math.random() * 0.5 + "s";
+
+                container.appendChild(emoji);
 
                 setTimeout(() => {
-                    particle.remove();
-                }, 700);
+                    emoji.remove();
+                }, 5000);
             }
         }
-
-        function createSmile() {
-
-            const position = randomPosition();
-
-            const smile = document.createElement("div");
-
-            smile.className = "smile";
-
-            smile.textContent =
-                emojis[Math.floor(Math.random() * emojis.length)];
-
-            smile.style.left = position.x + "px";
-            smile.style.top = position.y + "px";
-
-            smile.addEventListener("click", function(event) {
-
-                createParticles(
-                    event.clientX,
-                    event.clientY
-                );
-
-                createSmile();
-            });
-
-            document.body.appendChild(smile);
-
-            count++;
-
-            document.getElementById("counter").textContent =
-                "смайликов: " + count;
-        }
-
-        document.getElementById("start").addEventListener(
-            "click",
-            function(event) {
-
-                createParticles(
-                    event.clientX,
-                    event.clientY
-                );
-
-                createSmile();
-            }
-        );
     </script>
 
 </body>
 </html>
 ```
+
